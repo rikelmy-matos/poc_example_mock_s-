@@ -15,6 +15,7 @@ import com.devsuperior.examplemockspy.dto.ProductDTO;
 import com.devsuperior.examplemockspy.entities.Product;
 import com.devsuperior.examplemockspy.repositories.ProductRepository;
 import com.devsuperior.examplemockspy.services.exceptions.InvalidDataException;
+import com.devsuperior.examplemockspy.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -122,6 +123,17 @@ public class ProductServiceTests {
 		
 		Assertions.assertThrows(InvalidDataException.class, () -> {
 			ProductDTO result = serviceSpy.update(existingId, productDTO);
+		});
+	}
+	
+	@Test
+	public void updateShouldReturnResourceNotFoundExceptionWhenIdDoesNotExistsAndValidData() {
+		
+		ProductService serviceSpy = Mockito.spy(service);
+		Mockito.doNothing().when(serviceSpy).validateData(productDTO);
+		
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			ProductDTO result = serviceSpy.update(nonExistingId, productDTO);
 		});
 		
 	}
