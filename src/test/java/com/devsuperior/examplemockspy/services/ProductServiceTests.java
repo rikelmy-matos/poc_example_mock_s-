@@ -59,9 +59,22 @@ public class ProductServiceTests {
 		Assertions.assertEquals(result.getName(), "Playstation");
 		
 	}
+	
 	@Test
 	public void insertShouldReturnInvalidDataExceptionWhenProductNameIsBlank() {
 		productDTO.setName("");
+		
+		ProductService serviceSpy = Mockito.spy(service);
+		Mockito.doThrow(InvalidDataException.class).when(serviceSpy).validateData(productDTO);
+		
+		Assertions.assertThrows(InvalidDataException.class, () -> {
+			ProductDTO result = serviceSpy.insert(productDTO);
+		});
+	}
+	
+	@Test
+	public void insertShouldReturnInvalidDataExceptionWhenProductPriceIsNegativeOrZero() {
+		productDTO.setPrice(-5.0);
 		
 		ProductService serviceSpy = Mockito.spy(service);
 		Mockito.doThrow(InvalidDataException.class).when(serviceSpy).validateData(productDTO);
