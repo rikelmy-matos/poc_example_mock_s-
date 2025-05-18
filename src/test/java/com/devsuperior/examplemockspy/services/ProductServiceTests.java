@@ -2,7 +2,9 @@ package com.devsuperior.examplemockspy.services;
 
 import static org.mockito.ArgumentMatchers.any;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -43,8 +45,20 @@ public class ProductServiceTests {
 		
 		Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
 		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
-
-
 	}
+	
+	@Test
+	public void insertShouldReturnProductDTOWhenValidDate() {
+		
+		ProductService serviceSpy = Mockito.spy(service);
+		Mockito.doNothing().when(serviceSpy).validateData(productDTO);
+		
+		ProductDTO result = serviceSpy.insert(productDTO);
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(result.getName(), "Playstation");
+		
+	}
+	
+	
 
 }
